@@ -3,8 +3,10 @@ package org.angelldca.helloworld.screen.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,6 +28,9 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,17 +38,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 
 import androidx.compose.ui.unit.dp
+import org.angelldca.helloworld.presentation.PokemonSearchViewModel
+import org.angelldca.helloworld.presentation.SearchViewModel
+import org.angelldca.helloworld.screen.ui.doc_test.CenterAlignedTopAppBarExample
+import org.koin.compose.koinInject
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Search(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    onSearch: () -> Unit,
-    modifier: Modifier = Modifier,
-    placeholder: String = "Search your task here..."
+    vm: SearchViewModel,
+    modifier: Modifier = Modifier
 ) {
+    val query by vm.query.collectAsState()
+
     println("++++++++++++++++++++++++++++recomposable Search+++++++++++++++++++++++++++++++++")
     val shape = RoundedCornerShape(12.dp)
     MaterialTheme {
@@ -53,35 +61,37 @@ fun Search(
             color = Color.White,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(64.dp)
+               .height(64.dp)
 
         ) {
-            Row(
-                modifier = modifier
-                    .fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Column {
+                Row(
+                    modifier = modifier
+                        .fillMaxSize(),
+                       // .height(64.dp)
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 
-                     TextField(
-                         value = query,
-                         onValueChange = onQueryChange,
-                         placeholder = { Text(placeholder) },
-                         singleLine = true,
-                         modifier = Modifier.weight(1f),
-                         colors = TextFieldDefaults.colors(
-                             focusedContainerColor = Color.Transparent,
-                             unfocusedContainerColor = Color.Transparent,
-                             disabledContainerColor = Color.Transparent,
-                             focusedIndicatorColor = Color.Transparent,
-                             unfocusedIndicatorColor = Color.Transparent,
-                             cursorColor = Color.Black
-                         ),
-                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                         keyboardActions = KeyboardActions(onSearch = { onSearch() }),
-                         )
+                    TextField(
+                        value = query,
+                        onValueChange = vm::onQueryChanged, //onQueryChange,
+                        placeholder = { Text(text = "write") },
+                        singleLine = true,
+                        modifier = Modifier.weight(1f),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            cursorColor = Color.Black
+                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                        keyboardActions = KeyboardActions(onSearch = { /*TODO*/ }),
+                    )
 
                     IconButton(
-                        onClick = onSearch,
+                        onClick = { /*onSearch*/ },
                         modifier = Modifier
                             .size(64.dp)
                             .clip(RoundedCornerShape(10.dp))
@@ -95,6 +105,9 @@ fun Search(
                         )
                     }
                 }
+
+
+            }
 
         }
     }

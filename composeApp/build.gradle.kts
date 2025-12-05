@@ -63,6 +63,7 @@ kotlin {
         }
         jsMain.dependencies {
             implementation(npm("@js-joda/timezone", "2.22.0"))
+            implementation("io.coil-kt.coil3:coil-network-ktor3:3.3.0")
         }
 
         wasmJsMain.dependencies {

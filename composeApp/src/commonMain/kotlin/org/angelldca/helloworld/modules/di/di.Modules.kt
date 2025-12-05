@@ -5,6 +5,7 @@ import org.angelldca.helloworld.domain.PokeApiService
 import org.angelldca.helloworld.domain.service.PokemonRepositoryImpl
 import org.angelldca.helloworld.infrastructure.platformHttpClient
 import org.angelldca.helloworld.presentation.PokemonSearchViewModel
+import org.angelldca.helloworld.presentation.SearchViewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -19,4 +20,5 @@ val dataModule: Module = module {
 }
 val presentationModule = module {
     factory { PokemonSearchViewModel(get()) }
+    factory { SearchViewModel(get()) }
 }

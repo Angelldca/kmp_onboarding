@@ -23,7 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 import org.angelldca.helloworld.presentation.PokemonSearchViewModel
+import org.angelldca.helloworld.presentation.SearchViewModel
 import org.angelldca.helloworld.screen.ui.Search
+import org.angelldca.helloworld.screen.ui.doc_test.CenterAlignedTopAppBarExample
 import org.angelldca.helloworld.screen.ui.screen
 
 import org.koin.compose.koinInject
@@ -32,12 +34,11 @@ import org.koin.compose.koinInject
 @Composable
 fun DashboardPanel(){
     println("++++++Recomposable Dashboard Panel+++++++++++++++++++++++++++++++++")
-    //val vm = remember { PokemonSearchViewModel(api) }
-    val vm: PokemonSearchViewModel = koinInject()
+    val vm: SearchViewModel = koinInject()
     DisposableEffect(Unit) {
         onDispose { vm.clear() }
     }
-    val state by vm.state.collectAsState()
+    val suggestions by vm.suggestions.collectAsState()
 
     screen {
         val shape = RoundedCornerShape(12.dp)
@@ -51,18 +52,15 @@ fun DashboardPanel(){
         ){
             Column {
                 //RecomposeCounter("DashboardPanel")
-                Search(
-                    query = state.query,
-                    onQueryChange = vm::onQueryChange, // ✅ aquí se dispara la lógica
-                    onSearch = vm::onSearch
-                )
+                Search(vm = vm)
 
                 Spacer(Modifier.height(12.dp))
                 when {
+                    suggestions.isEmpty() -> CenterAlignedTopAppBarExample("Buscando...")
+                    // state.error != null ->CenterAlignedTopAppBarExample("Error: ${state.error}")
+                    //  state.result != null ->CenterAlignedTopAppBarExample("Result: ${state.result}")
+                    else -> CenterAlignedTopAppBarExample(suggestions)
 
-                    state.isLoading -> LoggingText("Buscando...")
-                    state.error != null -> LoggingText("Error: ${state.error}")
-                    state.result != null -> LoggingText("Encontrado: ${state.result} ")
                 }
             }
 
@@ -70,11 +68,4 @@ fun DashboardPanel(){
     }
 }
 
-@Composable
-fun LoggingText(
-    text: String,
-    tag: String = "LoggingText"
-) {
-    println("++++++++++====[$tag] Recompuesto con texto: '$text' +++++++++++++++++++++++++++++++")
-    Text(text = text)
-}
+
