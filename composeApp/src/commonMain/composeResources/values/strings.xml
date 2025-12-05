@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">KotlinProject</string>
+    <string name="back">Go Back</string>
+    <string name="poke_api">https://pokeapi.co/api/v2/</string>
+</resources>
